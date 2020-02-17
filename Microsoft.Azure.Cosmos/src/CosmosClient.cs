@@ -735,14 +735,11 @@ namespace Microsoft.Azure.Cosmos
 
         private HttpClientHandler CreateHttpClientHandler(CosmosClientOptions clientOptions)
         {
-            if (clientOptions == null || (clientOptions.WebProxy == null))
-            {
-                return null;
-            }
-
             HttpClientHandler httpClientHandler = new HttpClientHandler();
-            httpClientHandler.Proxy = clientOptions.WebProxy;
-
+            if (clientOptions?.WebProxy != null)
+                httpClientHandler.Proxy = clientOptions.WebProxy;
+            if (clientOptions?.GatewayModeMaxConnectionLimit > 0)
+                httpClientHandler.MaxConnectionsPerServer = clientOptions.GatewayModeMaxConnectionLimit;
             return httpClientHandler;
         }
 
